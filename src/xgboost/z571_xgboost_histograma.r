@@ -9,7 +9,7 @@ require("data.table")
 require("xgboost")
 
 #Aqui se debe poner la carpeta de la computadora local
-setwd("D:\\gdrive\\UTN2022P\\")   #Establezco el Working Directory
+setwd( "C:\\Users\\USER\\Documents\\utnpracticas\\mde\\" )    #Establezco el Working Directory
 
 #cargo el dataset donde voy a entrenar
 dataset  <- fread("./datasets/paquete_premium_202011.csv", stringsAsFactors= TRUE)
@@ -32,10 +32,10 @@ modelo  <- xgb.train( data= dtrain,
                                    tree_method=     "hist",
                                    grow_policy=     "lossguide",
                                    max_bin=            256,
-                                   max_leaves=          20,
-                                   min_child_weight=    1,
-                                   eta=                 0.3,
-                                   colsample_bytree=    1.0
+                                   max_leaves=          643,
+                                   min_child_weight=    10,
+                                   eta=                 0.0102187591106128,
+                                   colsample_bytree=    0.687978786804117
                                    ),
                       nrounds= 34  # MUY IMPORTANTE,  la cantidad de arboles del ensemble
                     )
@@ -52,9 +52,9 @@ prediccion  <- predict( modelo,
 entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_cliente],
                                  "Predicted"= as.integer( prediccion > 1/60)  ) ) #genero la salida
 
-dir.create( "./labo/exp/",  showWarnings = FALSE ) 
-dir.create( "./labo/exp/KA5710/", showWarnings = FALSE )
-archivo_salida  <- "./labo/exp/KA5710/KA_571_001.csv"
+dir.create( "./exp/",  showWarnings = FALSE ) 
+dir.create( "./exp/KA5710/", showWarnings = FALSE )
+archivo_salida  <- "./exp/KA5710/KA_571_002.csv"
 
 #genero el archivo para Kaggle
 fwrite( entrega, 

@@ -8,7 +8,7 @@ require("data.table")
 require("lightgbm")
 
 #Aqui se debe poner la carpeta de la computadora local
-setwd("D:\\gdrive\\UTN2022P\\")   #Establezco el Working Directory
+setwd( "C:\\Users\\USER\\Documents\\utnpracticas\\mde\\" )    #Establezco el Working Directory
 
 #cargo el dataset donde voy a entrenar
 dataset  <- fread("./datasets/paquete_premium_202011.csv", stringsAsFactors= TRUE)
@@ -33,10 +33,10 @@ modelo  <- lgb.train( data= dtrain,
                       param= list( objective=        "binary",
                                    max_bin=             31,
                                    learning_rate=        0.1,
-                                   num_iterations=      50,
-                                   num_leaves=          64,
-                                   feature_fraction=     0.5,
-                                   min_data_in_leaf=  3000,
+                                   num_iterations=      67,
+                                   num_leaves=          31,
+                                   feature_fraction=     1,
+                                   min_data_in_leaf=  20,
                                    seed=            999983 )  )
 
 
@@ -56,9 +56,9 @@ prediccion  <- predict( modelo,
 entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_cliente],
                                  "Predicted"= as.integer(prediccion > 1/60 ) )  ) #genero la salida
 
-dir.create( "./labo/exp/",  showWarnings = FALSE ) 
-dir.create( "./labo/exp/KA2512/", showWarnings = FALSE )
-archivo_salida  <- "./labo/exp/KA2512/KA_512_001.csv"
+dir.create( "./exp/",  showWarnings = FALSE ) 
+dir.create( "./exp/KA2512/", showWarnings = FALSE )
+archivo_salida  <- "./exp/KA2512/KA_512_002.csv"
 
 #genero el archivo para Kaggle
 fwrite( entrega, 
@@ -68,7 +68,7 @@ fwrite( entrega,
 
 #ahora imprimo la importancia de variables
 tb_importancia  <-  as.data.table( lgb.importance(modelo) ) 
-archivo_importancia  <- "./labo/exp/KA2512/512_importancia_001.txt"
+archivo_importancia  <- "./exp/KA2512/512_importancia_002.txt"
 
 fwrite( tb_importancia, 
         file= archivo_importancia, 
